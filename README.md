@@ -46,7 +46,7 @@ An intelligent ad copywriting system that generates high-converting marketing co
 
 ### Prerequisites
 
-- Python 3.12 or higher.
+- Python 3.10 or higher.
 - `uv` for virtual environment management ([Learn more](https://www.datacamp.com/tutorial/python-uv)).
 - `npm` for client dependencies.
 
@@ -64,7 +64,7 @@ To copy the **.env.example** file to **.env**, you can use the following command
 ```bash
 cp .env.example .env
 ```
-This will create a **.env** file with the same content as **.env.example**. You can then edit the **.env** file to add your actual environment variables, such as **LUNOS_API_KEY**.
+This will create a **.env** file with the same content as **.env.example**. You can then edit the **.env** file to add your actual environment variables, such as **LUNOS_API_KEY**. you can get API Key [here](lunos.tech)
 ```bash
 # .env file
 LUNOS_API_KEY='your_api_key'
@@ -203,6 +203,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🚀 Roadmap
 
 - [ ] Add Image Generation.
+- [ ] Docker deployment
 
 ---
 
