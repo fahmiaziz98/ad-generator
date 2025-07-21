@@ -26,7 +26,12 @@ class AdType(str, Enum):
     EMAIL = "email"
     PRODUCT_DESCRIPTION = "product_description"
 
-class AdTone(str, Enum):
-    PROFESSIONAL = "professional"
-    URGENT = "urgent"
+class AdTone(Enum):
     FRIENDLY = "friendly"
+    PROFESSIONAL = "professional" 
+    URGENT = "urgent"
+    PLAYFUL = "playful"
+    LUXURIOUS = "luxurious"
+    MINIMALIST = "minimalist"
+    BOLD = "bold"
+    CONVERSATIONAL = "conversational"
