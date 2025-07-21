@@ -345,6 +345,11 @@ const generateAd = async () => {
 								<option value="professional">Professional</option>
 								<option value="friendly">Friendly</option>
 								<option value="urgent">Urgent</option>
+								<option value="luxurious">Luxurious</option>
+								<option value="playful">Playful</option>
+								<option value="minimalist">Minimalist</option>
+								<option value="bold">Bold</option>
+								<option value="conversational">Conversational</option>
 							</select>
 						</div>
 					</div>
@@ -373,7 +378,7 @@ const generateAd = async () => {
 			</div>
 
 		   <!-- AI Response Section -->
-		   <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/30 flex flex-col lg:col-span-1 lg:max-w-xl w-full mx-auto lg:h-[600px] h-auto">
+		   <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/30 flex flex-col lg:col-span-1 lg:min-h-[50%] h-auto">
 				<div class="p-6 border-b border-gray-100">
 					<div class="flex items-center justify-between">
 						<h2 class="text-2xl font-semibold text-gray-800 flex items-center">
@@ -428,7 +433,6 @@ const generateAd = async () => {
 						</div>
 					{/if}
 				</div>
-
 				{#if responseExpanded}
 					<div class="flex-1 p-6">
 						{#if !generatedAd && !isGenerating}
@@ -442,7 +446,7 @@ const generateAd = async () => {
 						{:else}
 							<div
 							   id="response-area"
-							   class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 min-h-64 max-h-72 overflow-y-auto"
+							   class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 min-h-[50vh] max-h-[50vh] overflow-y-auto"
 							>
 								{#if isGenerating && !generatedAd}
 									<div class="flex items-center text-gray-500">
@@ -454,7 +458,11 @@ const generateAd = async () => {
 									</div>
 								{:else if generatedAd}
 									<div class="prose prose-gray max-w-none">
-										<pre class="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed">{generatedAd}</pre>
+										<textarea
+											class="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed bg-transparent border border-gray-300 rounded-md p-2 w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+											bind:value={generatedAd}
+											style="width: 100%; height: 40vh;"
+										></textarea>
 										{#if isStreaming}
 											<span class="inline-block w-2 h-5 bg-blue-500 animate-pulse ml-1"></span>
 										{/if}
