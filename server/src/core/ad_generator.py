@@ -1,6 +1,6 @@
-from models.ad import AdType, AdTone
-from core.llm import LLM
-from core.prompt_templates import FlexibleAdPromptGenerator
+from ..models.ad import AdType, AdTone
+from ..core.llm import LLM
+from ..core.prompt_templates import FlexibleAdPromptGenerator
 
 
 class AdGenerator:

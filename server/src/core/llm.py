@@ -1,5 +1,5 @@
 from openai import AsyncOpenAI
-from config import settings
+from ..config import settings
 from typing import Any
 
 

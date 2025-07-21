@@ -1,6 +1,6 @@
 from typing import List
 from enum import Enum
-from models.ad import AdType, AdTone
+from ..models.ad import AdType, AdTone
 
 
 class FlexibleAdPromptGenerator:

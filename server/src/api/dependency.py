@@ -1,5 +1,5 @@
 from functools import lru_cache
-from core.ad_generator import AdGenerator
+from ..core.ad_generator import AdGenerator
 
 @lru_cache()
 def get_ad_generator() -> AdGenerator:

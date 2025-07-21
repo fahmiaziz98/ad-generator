@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
-from models.ad import ProductInput, AdType, AdTone
+from ..models.ad import ProductInput, AdType, AdTone
 from .dependency import get_ad_generator
 
 
