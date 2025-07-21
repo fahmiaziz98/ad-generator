@@ -176,18 +176,3 @@ Output only the product description with proper formatting.
     def get_available_ad_types(cls) -> List[AdType]:
         """Get all available ad types"""
         return list(cls.BASE_TEMPLATES.keys())
-
-# # Example usage
-# if __name__ == "__main__":
-#     generator = FlexibleAdPromptGenerator()
-    
-#     # Generate a friendly social media prompt
-#     prompt = generator.generate_prompt(AdType.SOCIAL_MEDIA, AdTone.FRIENDLY)
-#     print("=== FRIENDLY SOCIAL MEDIA PROMPT ===")
-#     print(prompt)
-#     print("\n" + "="*50 + "\n")
-    
-#     # Generate a luxurious email prompt  
-#     prompt = generator.generate_prompt(AdType.EMAIL, AdTone.LUXURIOUS)
-#     print("=== LUXURIOUS EMAIL PROMPT ===")
-#     print(prompt)

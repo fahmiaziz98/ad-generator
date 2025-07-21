@@ -10,6 +10,7 @@ class AdGenerator:
         self.llm = LLM()
 
     def generate(self, data_product: str, ad_type: AdType, ad_tone: AdTone):
+        """Generate ad content based on product data, ad type, and ad tone."""
         if not isinstance(ad_type, AdType):
             raise ValueError(f"Invalid ad type: {ad_type}")
         if not isinstance(ad_tone, AdTone):

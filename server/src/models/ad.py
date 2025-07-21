@@ -14,11 +14,8 @@ class ProductInput(BaseModel):
     description: Optional[str] = Field(None, max_length=1000)
     image_url: Optional[str] = Field(None, max_length=1000)
     product_url: Optional[str] = Field(None, max_length=1000)
-
     ad_type: Optional[str] = Field(None, max_length=50)
     ad_tone: Optional[str] = Field(None, max_length=50)
-
-    # target_audience: Optional[str] = Field(None, max_length=200)
 
 
 class AdType(str, Enum):

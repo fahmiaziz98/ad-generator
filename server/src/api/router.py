@@ -11,6 +11,7 @@ async def generate_ad_stream(
     product: ProductInput,
     ad_generator=Depends(get_ad_generator)
 ):
+    """Generate ad content based on product input and stream the response."""
     ad_type = AdType(product.ad_type) if product.ad_type else AdType.SOCIAL_MEDIA
     ad_tone = AdTone(product.ad_tone) if product.ad_tone else AdTone.FRIENDLY
     product_data = product.model_dump(exclude={"ad_type", "ad_tone"})
