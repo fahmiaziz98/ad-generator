@@ -30,8 +30,30 @@ class Settings(BaseSettings):
     LUNOS_API_KEY: str 
     LUNOS_BASE_URL: str = "https://api.lunos.tech/v1"
     DEFAULT_MODEL_NAME: str = "google/gemma-3-12b-it"
-    GEMINI_API_KEY: Optional[str] = "gemini_api_key"
 
+    # Gemini Image Generation settings
+    GEMINI_API_KEY: str 
+    GEMINI_IMAGE_MODEL_NAME: str = "gemini-2.0-flash-preview-image-generation"
+
+    #  add safety settings
+    SAFETY_SETTINGS: list[dict] = [
+        {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+        },
+        {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+        },
+        {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+        },
+        {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+        }
+    ]
     # Rate Limiting
     RATE_LIMIT_REQUESTS: int = 100
     RATE_LIMIT_WINDOW: int = 3600  # 1 hour in seconds

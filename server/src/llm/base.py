@@ -31,3 +31,14 @@ class BaseLLMClient(ABC):
     async def health_check(self) -> bool:
         """Check if the LLM service is healthy"""
         pass
+
+    @abstractmethod
+    async def generate_image(
+        self, 
+        prompt: str, 
+        max_tokens: int = 1000, 
+        temperature: float = 1,
+        **kwargs
+    ) -> str:
+        """Generate image based on the prompt"""
+        pass
