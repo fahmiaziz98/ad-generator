@@ -1,19 +1,8 @@
-<script lang="ts">
+<script>
 	import { tick } from 'svelte';
 
 	// Form state
-	let formData: {
-		product_name: string;
-		brand_name: string;
-		category: string[];
-		price: number | string;
-		discounted_price: string;
-		description: string;
-		image_url: string;
-		product_url: string;
-		ad_type: string;
-		ad_tone: string;
-	} = {
+	let formData = $state({
 		product_name: '',
 		brand_name: '',
 		category: [],
@@ -24,7 +13,7 @@
 		product_url: '',
 		ad_type: 'social_media',
 		ad_tone: 'professional'
-	};
+	});
 
 	// UI state
 	let isGenerating = $state(false);
@@ -36,21 +25,15 @@
 	let wordCount = $state(0);
 
 	// Form validation
-	let errors = $state<{
-		product_name?: string;
-		brand_name?: string;
-		category?: string;
-		price?: string;
-		description?: string;
-	}>({});
+	let errors = $state({});
 
 	const validateForm = () => {
-		const newErrors: typeof errors = {};
+		const newErrors = {};
 		
 		if (!formData.product_name.trim()) newErrors.product_name = 'Product name is required';
 		if (!formData.brand_name.trim()) newErrors.brand_name = 'Brand name is required';
 		if (formData.category.length === 0) newErrors.category = 'At least one category is required';
-		if (!formData.price || Number(formData.price) <= 0) newErrors.price = 'Valid price is required';
+		if (!formData.price || formData.price <= 0) newErrors.price = 'Valid price is required';
 		if (!formData.description.trim()) newErrors.description = 'Description is required';
 		
 		errors = newErrors;
@@ -58,18 +41,17 @@
 	};
 
 	const addCategory = () => {
-		const trimmedInput = categoryInput.trim();
-		if (trimmedInput && !formData.category.includes(trimmedInput)) {
-			formData.category = [...formData.category, trimmedInput];
+		if (categoryInput.trim() && !formData.category.includes(categoryInput.trim())) {
+			formData.category = [...formData.category, categoryInput.trim()];
 			categoryInput = '';
 		}
 	};
 
-	const removeCategory = (index: number) => {
+	const removeCategory = (index) => {
 		formData.category = formData.category.filter((_, i) => i !== index);
-	}; 
+	};
 
-	const handleCategoryKeydown = (event: KeyboardEvent) => {
+	const handleCategoryKeydown = (event) => {
 		if (event.key === 'Enter') {
 			event.preventDefault();
 			addCategory();
@@ -77,7 +59,7 @@
 	};
 
 	// Simulate streaming response
-	const simulateStreaming = async (text: string) => {
+	const simulateStreaming = async (text) => {
 		generatedAd = '';
 		isStreaming = true;
 		
@@ -143,7 +125,7 @@
 				}
 			}
 			wordCount = generatedAd.trim().split(/\s+/).filter(word => word.length > 0).length;
-		} catch (err: unknown) {
+		} catch (err) {
 			console.error('Streaming error:', err);
 			generatedAd = '[ERROR] ' + (err instanceof Error ? err.message : 'Unknown error');
 		} finally {
@@ -167,6 +149,7 @@
 		responseExpanded = false;
 		wordCount = 0;
 	};
+
 </script>
 
 <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -187,7 +170,7 @@
 		</header>
 
 		<!-- Main Content -->
-	   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
 		   <!-- Form Section -->
 		   <div class="bg-white/80 backdrop-blur-md rounded-3xl p-10 shadow-2xl border border-white/30 flex flex-col justify-between lg:col-span-1 lg:min-h-[600px]">
 				<h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
@@ -403,8 +386,8 @@
 				</form>
 			</div>
 
-		   <!-- AI Response Section -->
-		   <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/30 flex flex-col lg:col-span-1 lg:min-h-[50%] h-auto">
+			<!-- AI Response Section -->
+			<div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/30 flex flex-col lg:col-span-1 lg:min-h-[50%] h-auto">
 				<div class="p-6 border-b border-gray-100">
 					<div class="flex items-center justify-between">
 						<h2 class="text-2xl font-semibold text-gray-800 flex items-center">
@@ -472,7 +455,7 @@
 						{:else}
 							<div
 							   id="response-area"
-							   class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 min-h-[50vh] max-h-[50vh] overflow-y-auto"
+							   class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 min-h-[65vh] max-h-[65vh] overflow-y-auto"
 							>
 								{#if isGenerating && !generatedAd}
 									<div class="flex items-center text-gray-500">
@@ -485,9 +468,8 @@
 								{:else if generatedAd}
 									<div class="prose prose-gray max-w-none">
 										<textarea
-											class="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed bg-transparent border border-gray-300 rounded-md p-2 w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+											class="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed bg-transparent border border-gray-300 rounded-md p-2 w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 h-[60vh]"
 											bind:value={generatedAd}
-											style="width: 100%; height: 40vh;"
 										></textarea>
 										{#if isStreaming}
 											<span class="inline-block w-2 h-5 bg-blue-500 animate-pulse ml-1"></span>
@@ -508,3 +490,4 @@
 		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 	}
 </style>
+
