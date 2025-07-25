@@ -4,7 +4,7 @@ install-server:
 
 # run server
 run-server:
-	uvicorn server.src.main:app --reload --host 0.0.0.0 --port 8000
+	fastapi dev server/src/main.py
 
 # install dependency node
 install-client:

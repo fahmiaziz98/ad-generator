@@ -1,12 +1,9 @@
 from typing import List
-from enum import Enum
-from ..models.ad import AdType, AdTone
-
+from src.models.requests import AdType, AdTone
 
 class FlexibleAdPromptGenerator:
     """Modular ad prompt system with flexible tone application"""
     
-    # Base templates untuk setiap ad type
     BASE_TEMPLATES = {
         AdType.SOCIAL_MEDIA: """
 You are a high-performing social media copywriter creating content for platforms like Instagram, Facebook, and TikTok.
@@ -79,7 +76,6 @@ Output only the product description with proper formatting.
 """
     }
     
-    # Tone modifiers yang bisa dikombinasikan dengan base template manapun
     TONE_MODIFIERS = {
         AdTone.FRIENDLY: """
 # TONE: FRIENDLY #

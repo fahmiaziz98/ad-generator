@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .api.router import router
-from .config import settings
+from src.api.v1.ad_routers import router
+from src.config import settings
 
 app = FastAPI(
-    title=settings.app_name,
-    version=settings.app_version,
-    debug=settings.debug,
-    description="MVP Ad Generator with Database Integration"
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
+    debug=settings.DEBUG,
+    description=settings.APP_DESCRIPTION,
 )
 app.add_middleware(
     CORSMiddleware,
