@@ -1,4 +1,5 @@
 import json
+from loguru import logger
 from typing import Annotated
 from fastapi import (
     APIRouter, 
@@ -60,7 +61,7 @@ async def generate_ad(
 async def generate_ad_streaming(
     request: AdGenerationRequest,
     ad_service: Annotated[AdService, Depends(get_ad_service)],
-    rate_limiter=Depends(get_rate_limiter)
+    # rate_limiter=Depends(get_rate_limiter)
 ):
     """
     Generate advertisement content with streaming response.
@@ -76,6 +77,7 @@ async def generate_ad_streaming(
             async for chunk in ad_service.generate_ad_streaming(request):
                 yield json.dumps(chunk, default=str) + "\n"
         except Exception as e:
+            logger.info(e)
             error_response = {
                 "status": "error",
                 "error_code": "generation_failed",

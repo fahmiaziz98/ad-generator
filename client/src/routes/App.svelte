@@ -1,8 +1,19 @@
-<script>
+<script lang="ts">
 	import { tick } from 'svelte';
 
 	// Form state
-	let formData = $state({
+	let formData: {
+		product_name: string;
+		brand_name: string;
+		category: string[];
+		price: number | string;
+		discounted_price: string;
+		description: string;
+		image_url: string;
+		product_url: string;
+		ad_type: string;
+		ad_tone: string;
+	} = {
 		product_name: '',
 		brand_name: '',
 		category: [],
@@ -13,7 +24,7 @@
 		product_url: '',
 		ad_type: 'social_media',
 		ad_tone: 'professional'
-	});
+	};
 
 	// UI state
 	let isGenerating = $state(false);
@@ -25,15 +36,21 @@
 	let wordCount = $state(0);
 
 	// Form validation
-	let errors = $state({});
+	let errors = $state<{
+		product_name?: string;
+		brand_name?: string;
+		category?: string;
+		price?: string;
+		description?: string;
+	}>({});
 
 	const validateForm = () => {
-		const newErrors = {};
+		const newErrors: typeof errors = {};
 		
 		if (!formData.product_name.trim()) newErrors.product_name = 'Product name is required';
 		if (!formData.brand_name.trim()) newErrors.brand_name = 'Brand name is required';
 		if (formData.category.length === 0) newErrors.category = 'At least one category is required';
-		if (!formData.price || formData.price <= 0) newErrors.price = 'Valid price is required';
+		if (!formData.price || Number(formData.price) <= 0) newErrors.price = 'Valid price is required';
 		if (!formData.description.trim()) newErrors.description = 'Description is required';
 		
 		errors = newErrors;
@@ -41,17 +58,18 @@
 	};
 
 	const addCategory = () => {
-		if (categoryInput.trim() && !formData.category.includes(categoryInput.trim())) {
-			formData.category = [...formData.category, categoryInput.trim()];
+		const trimmedInput = categoryInput.trim();
+		if (trimmedInput && !formData.category.includes(trimmedInput)) {
+			formData.category = [...formData.category, trimmedInput];
 			categoryInput = '';
 		}
 	};
 
-	const removeCategory = (index) => {
+	const removeCategory = (index: number) => {
 		formData.category = formData.category.filter((_, i) => i !== index);
-	};
+	}; 
 
-	const handleCategoryKeydown = (event) => {
+	const handleCategoryKeydown = (event: KeyboardEvent) => {
 		if (event.key === 'Enter') {
 			event.preventDefault();
 			addCategory();
@@ -59,7 +77,7 @@
 	};
 
 	// Simulate streaming response
-	const simulateStreaming = async (text) => {
+	const simulateStreaming = async (text: string) => {
 		generatedAd = '';
 		isStreaming = true;
 		
@@ -80,51 +98,59 @@
 		wordCount = generatedAd.trim().split(/\s+/).filter(word => word.length > 0).length;
 	};
 
-const generateAd = async () => {
-	if (!validateForm()) return;
+	const generateAd = async () => {
+		if (!validateForm()) return;
 
-	isGenerating = true;
-	isStreaming = true;
-	generatedAd = '';
-	responseExpanded = true;
+		isGenerating = true;
+		isStreaming = true;
+		generatedAd = '';
+		responseExpanded = true;
 
-	try {
-		const response = await fetch('http://127.0.0.1:8000/ads/generate/stream', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(formData)
-		});
+		try {
+			const response = await fetch('http://127.0.0.1:8000/api/v1/generate-stream', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(formData)
+			});
 
-		if (!response.body) throw new Error('No response body');
+			if (!response.body) throw new Error('No response body');
 
-		const reader = response.body.getReader();
-		const decoder = new TextDecoder();
-		let done = false;
-		let adText = '';
+			const reader = response.body.getReader();
+			const decoder = new TextDecoder();
+			let done = false;
 
-		while (!done) {
-			const { value, done: doneReading } = await reader.read();
-			done = doneReading;
-			if (value) {
-				const chunk = decoder.decode(value);
-				adText += chunk;
-				generatedAd = adText;
-				await tick();
-				const responseArea = document.getElementById('response-area');
-				if (responseArea) {
-					responseArea.scrollTop = responseArea.scrollHeight;
+			while (!done) {
+				const { value, done: doneReading } = await reader.read();
+				done = doneReading;
+				if (value) {
+					const chunk = decoder.decode(value);
+					const lines = chunk.split('\n').filter(line => line.trim() !== '');
+					for (const line of lines) {
+						try {
+							const parsed = JSON.parse(line);
+							if (parsed.status === 'streaming' && parsed.content) {
+								generatedAd += parsed.content;
+								await tick();
+								const responseArea = document.getElementById('response-area');
+								if (responseArea) {
+									responseArea.scrollTop = responseArea.scrollHeight;
+								}
+							}
+						} catch (err) {
+							console.error('Failed to parse streaming response:', err);
+						}
+					}
 				}
 			}
+			wordCount = generatedAd.trim().split(/\s+/).filter(word => word.length > 0).length;
+		} catch (err: unknown) {
+			console.error('Streaming error:', err);
+			generatedAd = '[ERROR] ' + (err instanceof Error ? err.message : 'Unknown error');
+		} finally {
+			isGenerating = false;
+			isStreaming = false;
 		}
-		wordCount = generatedAd.trim().split(/\s+/).filter(word => word.length > 0).length;
-	} catch (err) {
-		console.error('Streaming error:', err);
-		generatedAd = '[ERROR] ' + err.message;
-	} finally {
-		isGenerating = false;
-		isStreaming = false;
-	}
-};
+	};
 
 	const copyToClipboard = async () => {
 		try {

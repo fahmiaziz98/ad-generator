@@ -6,7 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+# node modules
 node_modules
+
+# folder
+uploads
 
 # Output
 .output

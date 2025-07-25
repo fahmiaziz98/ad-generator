@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     # LLM settings 
     LUNOS_API_KEY: str 
     LUNOS_BASE_URL: str = "https://api.lunos.tech/v1"
+    DEFAULT_MODEL_NAME: str = "google/gemma-3-12b-it"
     GEMINI_API_KEY: Optional[str] = "gemini_api_key"
 
     # Rate Limiting
