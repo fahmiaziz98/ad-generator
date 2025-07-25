@@ -12,7 +12,7 @@ An intelligent ad copywriting system that generates high-converting marketing co
 - **Product-Aware**: Contextual ads based on detailed product information.
 
 ----
-- ![UI-1](assets/image01.png) 
+- ![UI-1](assets/images34.png) 
 
 
 ---
@@ -116,7 +116,7 @@ Access the client at [http://localhost:5173](http://localhost:5173).
 
 ```bash
 curl -X 'POST' \
-  'http://0.0.0.0:8000/ads/generate/stream' \
+  'http://0.0.0.0:8000/api/v1/generate-stream' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -137,7 +137,7 @@ curl -X 'POST' \
 
 ```bash
 curl -X 'POST' \
-  'http://0.0.0.0:8000/ads/generate/stream' \
+  'http://0.0.0.0:8000/api/v1/generate-stream' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -158,7 +158,7 @@ curl -X 'POST' \
 
 ```bash
 curl -X 'POST' \
-  'http://0.0.0.0:8000/ads/generate/stream' \
+  'http://0.0.0.0:8000/api/v1/generate-stream' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
