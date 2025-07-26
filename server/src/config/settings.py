@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     # File Upload Configuration
     UPLOAD_DIR: str = "uploads"
     MAX_FILE_SIZE: int = 5 * 1024 * 1024  # 5MB
+    ALLOWED_FILE_EXTENSIONS: set[str] = {".jpg", ".jpeg", ".png", ".webp"}
     ALLOWED_IMAGE_TYPES: set[str] = {"image/jpeg", "image/png", "image/webp"}
     
 
