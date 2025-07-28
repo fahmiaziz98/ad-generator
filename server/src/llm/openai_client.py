@@ -99,3 +99,6 @@ class OpenAIClient(BaseLLMClient):
             return True
         except Exception:
             return False
+        
+    def generate_image(self):
+        pass

@@ -26,7 +26,7 @@ router = APIRouter(prefix=settings.API_V1_PREFIX, tags=["Advertisement Generatio
 async def generate_ad(
     request: AdGenerationRequest,
     ad_service: Annotated[AdService, Depends(get_ad_service)],
-    rate_limiter=Depends(get_rate_limiter),
+    # rate_limiter=Depends(get_rate_limiter),
 ):
     """
     Generate advertisement content based on the provided request.

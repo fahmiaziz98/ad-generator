@@ -1,5 +1,5 @@
 from typing import Optional, List
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field
 from enum import Enum
 
 
@@ -18,9 +18,9 @@ class AdGenerationRequest(BaseModel):
     discounted_price: Optional[float] = Field(None, gt=0)
     
     # Image options
-    image_url: Optional[str] = Field(None, description="URL of existing product image")
-    generate_image: bool = Field(False, description="Generate AI image for product")
-    include_image_in_ad: bool = Field(True, description="Include image reference in generated ad")
+    # image_url: Optional[str] = Field(None, description="URL of existing product image")
+    # generate_image: bool = Field(False, description="Generate AI image for product")
+    # include_image_in_ad: bool = Field(True, description="Include image reference in generated ad")
      
     # type and tone
     ad_type: Optional[str] = Field(None, max_length=50)
@@ -30,6 +30,7 @@ class AdGenerationRequest(BaseModel):
 class ImageGenerationRequest(BaseModel):
     """Request model for standalone image generation"""
     product_name: str = Field(..., min_length=1, max_length=200)
+    brand_name: str = Field(None, max_length=100)
     description: str = Field(..., min_length=10, max_length=1000)
     
 

@@ -21,7 +21,7 @@ class AdSettings(BaseModel):
 class ImageResult(BaseModel):
     """Internal model for image processing results"""
     image_path: Optional[str] = None  # Local file path (for uploaded/generated)
-    image_url: str  # URL for accessing the image
+    image_url: Optional[str] = None  # URL for accessing the image
     source: str  # "uploaded", "url", "generated"
     generated: bool = False  # True if AI generated
 
