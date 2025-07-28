@@ -9,7 +9,6 @@
 		price: '',
 		discounted_price: '',
 		description: '',
-		image_url: '',
 		product_url: '',
 		ad_type: 'social_media',
 		ad_tone: 'professional'
@@ -23,6 +22,13 @@
 	let categoryInput = $state('');
 	let responseExpanded = $state(true);
 	let wordCount = $state(0);
+
+	// imagen
+	let generateImage = $state(false);
+	let imageLoading = $state(false);
+	let generatedImageUrl = $state(null);
+	let imageError = $state(null);
+
 
 	// Form validation
 	let errors = $state({});
@@ -58,26 +64,51 @@
 		}
 	};
 
-	// Simulate streaming response
-	const simulateStreaming = async (text) => {
-		generatedAd = '';
-		isStreaming = true;
-		
-		const words = text.split(' ');
-		for (let i = 0; i < words.length; i++) {
-			await new Promise(resolve => setTimeout(resolve, 50 + Math.random() * 100));
-			generatedAd += (i > 0 ? ' ' : '') + words[i];
+	// imagen api
+	const generateImageAPI = async () => {
+		try {
+			imageLoading = true;
+			imageError = null;
 			
-			// Auto-scroll to bottom of response area
-			await tick();
-			const responseArea = document.getElementById('response-area');
-			if (responseArea) {
-				responseArea.scrollTop = responseArea.scrollHeight;
+			const response = await fetch('http://127.0.0.1:8000/api/v1/generate-image', {
+				method: 'POST',
+				headers: {
+					'accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					product_name: formData.product_name,
+					brand_name: formData.brand_name,
+					description: formData.description
+				})
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-		}
+
+			const imageData = await response.json();
 		
-		isStreaming = false;
-		wordCount = generatedAd.trim().split(/\s+/).filter(word => word.length > 0).length;
+			if (imageData.image_path) {
+				const imageFileName = imageData.image_path.split('/').pop();
+				generatedImageUrl = `http://127.0.0.1:8000/api/v1/images/${imageFileName}`;
+			} else {
+				throw new Error('No image path received from API');
+			}
+		
+		} catch (error) {
+			console.error('Image generation error:', error);
+			imageError = error.message;
+			generatedImageUrl = null;
+		} finally {
+			imageLoading = false;
+		}
+	};
+
+	// retry
+	const retryImageGeneration = () => {
+		imageError = null;
+		generateImageAPI();
 	};
 
 	const generateAd = async () => {
@@ -89,6 +120,7 @@
 		responseExpanded = true;
 
 		try {
+
 			const response = await fetch('http://127.0.0.1:8000/api/v1/generate-stream', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -125,6 +157,15 @@
 				}
 			}
 			wordCount = generatedAd.trim().split(/\s+/).filter(word => word.length > 0).length;
+			
+			// Call image generation API if generateImage is true
+			if (generateImage) {
+				await generateImageAPI();
+			}
+			else {
+				generatedImageUrl = null;
+			}
+			
 		} catch (err) {
 			console.error('Streaming error:', err);
 			generatedAd = '[ERROR] ' + (err instanceof Error ? err.message : 'Unknown error');
@@ -148,6 +189,9 @@
 		generatedAd = '';
 		responseExpanded = false;
 		wordCount = 0;
+		generatedImageUrl = null;
+		imageError = null;
+		generateImage = false;
 	};
 
 </script>
@@ -306,18 +350,83 @@
 						{/if}
 					</div>
 
+					<!-- Image Generation -->
+					 <div>
+						<label class="block text-sm font-medium text-gray-700 mb-3">
+							Generate Image?
+							<button
+								type="button"
+								class="ml-2 text-gray-400 hover:text-gray-600"
+								title="Image generation takes 10-30 seconds"
+								aria-label="Image generation takes 10-30 seconds"
+							>
+								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+							</button>
+						</label>
+						<div class="flex space-x-6">
+							<label class="flex items-center">
+								<input
+									type="radio"
+									bind:group={generateImage}
+									value={true}
+									class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+								/>
+								<span class="ml-2 text-sm font-medium text-gray-700">Yes</span>
+							</label>
+							<label class="flex items-center">
+								<input
+									type="radio"
+									bind:group={generateImage}
+									value={false}
+									class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+								/>
+								<span class="ml-2 text-sm font-medium text-gray-700">No</span>
+							</label>
+						</div>
+						
+						{#if generateImage && imageLoading}
+							<div class="mt-3 flex items-center text-blue-600">
+								<svg class="animate-spin -ml-1 mr-3 h-4 w-4" fill="none" viewBox="0 0 24 24">
+									<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+									<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+								</svg>
+								<span class="text-sm">Generating image... Please wait (10-30 seconds)</span>
+							</div>
+						{/if}
+						
+						{#if imageError}
+							<div class="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+								<div class="flex items-center">
+									<svg class="w-4 h-4 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+									</svg>
+									<span class="text-sm text-red-700">Failed to generate image</span>
+								</div>
+								<div class="mt-2 flex space-x-2">
+									<button
+										type="button"
+										onclick={retryImageGeneration}
+										class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200 transition-colors duration-200"
+										aria-label="Retry Image Generation"
+									>
+										Retry
+									</button>
+									<button
+										type="button"
+										onclick={() => { generateImage = false; imageError = null; }}
+										class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded hover:bg-gray-200 transition-colors duration-200"
+										aria-label="Continue without Image Generation"
+									>
+										Continue without
+									</button>
+								</div>
+							</div>
+						{/if}
+					</div>
+
 					<!-- URLs -->
 					<div class="space-y-4">
-						<div>
-							<label for="image_url" class="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
-							<input
-								id="image_url"
-								type="url"
-								bind:value={formData.image_url}
-								placeholder="https://example.com/product-image.jpg"
-								class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50"
-							/>
-						</div>
 						<div>
 							<label for="product_url" class="block text-sm font-medium text-gray-700 mb-2">Product URL</label>
 							<input
@@ -478,6 +587,42 @@
 								{/if}
 							</div>
 						{/if}
+					</div>
+				{/if}
+				{#if generatedImageUrl}
+					<div class="mt-4">
+						<h3 class="text-lg font-medium text-gray-800 mb-3 flex items-center">
+							<svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+							</svg>
+							Generated Image:
+						</h3>
+						<div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+							<img
+								src={generatedImageUrl || "/placeholder.svg"}
+								alt={`Generated image for ${formData.product_name} by ${formData.brand_name}`}
+								class="w-full max-w-sm mx-auto rounded-lg shadow-md"
+								style="max-height: 300px; object-fit: contain;"
+								onload={() => console.log('Image loaded successfully')}
+								onerror={() => {
+									console.error('Failed to load generated image');
+									imageError = 'Failed to load generated image';
+									generatedImageUrl = null;
+								}}
+							/>
+							<div class="mt-3 flex justify-center">
+								<a
+									href={generatedImageUrl}
+									download={`${formData.product_name}_${formData.brand_name}_ad_image.png`}
+									class="inline-flex items-center px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors duration-200"
+								>
+									<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+									</svg>
+									Download Image
+								</a>
+							</div>
+						</div>
 					</div>
 				{/if}
 			</div>
