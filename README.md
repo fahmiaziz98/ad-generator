@@ -141,9 +141,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Below is an example of the user interface for the AI Ad Generator:
 
-<div style="display: flex; gap: 20px;">
-  <img src="assets/images34.png" alt="Example UI 1" style="width: 42%; object-fit: cover; border: 1px solid #ddd; border-radius: 8px;" />
-  <img src="assets/img007.png" alt="Example UI 2" style="width: 58%; height: 100%; object-fit: cover; border: 1px solid #ddd; border-radius: 8px;" />
+<div style="display: flex; flex-direction: column; gap: 20px;">
+  <img src="assets/images34.png" alt="Example UI 1" style="width: 70%; border: 1px solid #ddd; border-radius: 8px;" />
+  <img src="assets/img007.png" alt="Example UI 2" style="width: 70%; border: 1px solid #ddd; border-radius: 8px;" />
 </div>
 
 ---
