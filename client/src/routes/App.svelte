@@ -120,16 +120,21 @@
 		responseExpanded = true;
 
 		try {
+			// Run ad generation and image generation in parallel
+			const tasks = [
+				fetch('http://127.0.0.1:8000/api/v1/generate-stream', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(formData)
+				}),
+				generateImage ? generateImageAPI() : Promise.resolve()
+			];
 
-			const response = await fetch('http://127.0.0.1:8000/api/v1/generate-stream', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(formData)
-			});
+			const [adResponse] = await Promise.all(tasks);
 
-			if (!response.body) throw new Error('No response body');
+			if (!adResponse.body) throw new Error('No response body');
 
-			const reader = response.body.getReader();
+			const reader = adResponse.body.getReader();
 			const decoder = new TextDecoder();
 			let done = false;
 
@@ -157,15 +162,6 @@
 				}
 			}
 			wordCount = generatedAd.trim().split(/\s+/).filter(word => word.length > 0).length;
-			
-			// Call image generation API if generateImage is true
-			if (generateImage) {
-				await generateImageAPI();
-			}
-			else {
-				generatedImageUrl = null;
-			}
-			
 		} catch (err) {
 			console.error('Streaming error:', err);
 			generatedAd = '[ERROR] ' + (err instanceof Error ? err.message : 'Unknown error');
@@ -496,7 +492,7 @@
 			</div>
 
 			<!-- AI Response Section -->
-			<div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/30 flex flex-col lg:col-span-1 lg:min-h-[50%] h-auto">
+			<div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/30 flex flex-col lg:col-span-1 lg:min-h-[30%] h-auto">
 				<div class="p-6 border-b border-gray-100">
 					<div class="flex items-center justify-between">
 						<h2 class="text-2xl font-semibold text-gray-800 flex items-center">
