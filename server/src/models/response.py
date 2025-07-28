@@ -18,15 +18,12 @@ class AdSettings(BaseModel):
     ad_type: str = Field(..., description="Type of advertisement")
     ad_tone: str = Field(..., description="Tone of the advertisement")
 
-class ImageInfo(BaseModel):
-    """Image information in response"""
-    has_image: bool = Field(description="Whether image is included")
-    image_url: Optional[str] = Field(None, description="URL of the image")
-    image_source: Optional[Literal["uploaded", "url", "ai_generated"]] = Field(
-        None, description="Source of the image"
-    )
-    included_in_ad: bool = Field(False, description="Whether image is referenced in ad text")
-    generation_time: Optional[float] = Field(None, description="Time taken to generate/process image")
+class ImageResult(BaseModel):
+    """Internal model for image processing results"""
+    image_path: Optional[str] = None  # Local file path (for uploaded/generated)
+    image_url: str  # URL for accessing the image
+    source: str  # "uploaded", "url", "generated"
+    generated: bool = False  # True if AI generated
 
 class AdGenerationResponse(BaseModel):
     """Complete response for ad generation"""

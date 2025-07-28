@@ -19,8 +19,8 @@ class AdGenerationRequest(BaseModel):
     
     # Image options
     image_url: Optional[str] = Field(None, description="URL of existing product image")
-    # generate_image: bool = Field(False, description="Generate AI image for product")
-    # include_image_in_ad: bool = Field(True, description="Include image reference in generated ad")
+    generate_image: bool = Field(False, description="Generate AI image for product")
+    include_image_in_ad: bool = Field(True, description="Include image reference in generated ad")
      
     # type and tone
     ad_type: Optional[str] = Field(None, max_length=50)
