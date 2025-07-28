@@ -492,7 +492,7 @@
 			</div>
 
 			<!-- AI Response Section -->
-			<div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/30 flex flex-col lg:col-span-1 lg:min-h-[30%] h-auto">
+			<div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/30 flex flex-col lg:col-span-1 lg:min-h-[50%] h-auto">
 				<div class="p-6 border-b border-gray-100">
 					<div class="flex items-center justify-between">
 						<h2 class="text-2xl font-semibold text-gray-800 flex items-center">
@@ -548,7 +548,7 @@
 					{/if}
 				</div>
 				{#if responseExpanded}
-					<div class="flex-1 p-6">
+					<div class="flex-1 p-2 overflow-y-auto">
 						{#if !generatedAd && !isGenerating}
 							<div class="flex flex-col items-center justify-center h-64 text-gray-400">
 								<svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -560,7 +560,7 @@
 						{:else}
 							<div
 							   id="response-area"
-							   class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 min-h-[65vh] max-h-[65vh] overflow-y-auto"
+							   class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 min-h-[50vh] max-h-[50vh] overflow-y-auto"
 							>
 								{#if isGenerating && !generatedAd}
 									<div class="flex items-center text-gray-500">
@@ -573,7 +573,7 @@
 								{:else if generatedAd}
 									<div class="prose prose-gray max-w-none">
 										<textarea
-											class="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed bg-transparent border border-gray-300 rounded-md p-2 w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 h-[60vh]"
+											class="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed bg-transparent border border-gray-300 rounded-md p-2 w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 h-[40vh]"
 											bind:value={generatedAd}
 										></textarea>
 										{#if isStreaming}
@@ -586,7 +586,7 @@
 					</div>
 				{/if}
 				{#if generatedImageUrl}
-					<div class="mt-4">
+					<div class="mt-1">
 						<h3 class="text-lg font-medium text-gray-800 mb-3 flex items-center">
 							<svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
