@@ -10,10 +10,7 @@ An intelligent ad copywriting system that generates high-converting marketing co
 - **Flexible Tone System**: Choose from 8 different tones to match your brand voice.
 - **Real-time Streaming**: Stream responses for better user experience.
 - **Product-Aware**: Contextual ads based on detailed product information.
-
-----
-- ![UI-1](assets/images34.png) 
-
+- **Image Generation**: Generate product images to complement your ad content.
 
 ---
 
@@ -58,7 +55,6 @@ git clone https://github.com/fahmiaziz98/ad-generator.git
 cd ad-generator
 ```
 
-
 ### Environment Variables
 To copy the **.env.example** file to **.env**, you can use the following command in your terminal:
 ```bash
@@ -75,107 +71,41 @@ LUNOS_API_KEY='your_api_key'
 ### Create & Activate Virtual Environment
 
 ```bash
+cd server
 # Initialize virtual environment
 uv init .
 
 # Activate the virtual environment
 source .venv/bin/activate
-```
 
-### Install Dependencies
-
-```bash
 # Install server dependencies
-make install-server
+uv pip install -r pyproject.toml 
 
-# Install client dependencies
-make install-client
-```
-
-### Run Server
-
-```bash
-make run-server
+# Run server
+fastapi dev src/main.py
 ```
 
 Access API documentation at [http://0.0.0.0:8000/docs](http://0.0.0.0:8000/docs).
 
-### Run Client
+### Install & Run Client
+Open another terminal:
 
 ```bash
-make run-client
+# Move to client directory
+cd client
+
+# Install client dependencies
+npm install
+
+# Run client
+npm run dev
 ```
 
 Access the client at [http://localhost:5173](http://localhost:5173).
+- **Note**: Please see api docs [here](server/API_DOCS.md)
 
 ---
 
-## 📚 API Examples
-
-### Social Media Ad (Playful Tone)
-
-```bash
-curl -X 'POST' \
-  'http://0.0.0.0:8000/api/v1/generate-stream' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "product_name": "Aurora Pro Wireless Earbuds",
-    "brand_name": "SoundWave",
-    "category": ["Electronics", "Audio"],
-    "price": 199,
-    "discounted_price": 149,
-    "description": "Premium wireless earbuds with noise cancellation and 24-hour battery life",
-    "image_url": "https://cdn.soundwave.com/earbuds.jpg",
-    "product_url": "https://shop.soundwave.com/aurora-earbuds",
-    "ad_type": "social_media",
-    "ad_tone": "playful"
-  }'
-```
-
-### Email Campaign (Professional Tone)
-
-```bash
-curl -X 'POST' \
-  'http://0.0.0.0:8000/api/v1/generate-stream' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "product_name": "Radiance Vitamin C Serum",
-    "brand_name": "LuxeDerm",
-    "category": ["Beauty", "Skincare"],
-    "price": 89,
-    "discounted_price": 89,
-    "description": "Clinical-grade vitamin C serum for brightening and anti-aging",
-    "image_url": "https://example.com/serum.jpg",
-    "product_url": "https://luxederm.com/vitamin-c-serum",
-    "ad_type": "email",
-    "ad_tone": "professional"
-  }'
-```
-
-### Product Description (Bold Tone)
-
-```bash
-curl -X 'POST' \
-  'http://0.0.0.0:8000/api/v1/generate-stream' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "product_name": "PowerFlex Resistance Bands Set",
-    "brand_name": "FitCore",
-    "category": ["Sports", "Fitness Equipment"],
-    "price": 45,
-    "discounted_price": 29,
-    "description": "Complete resistance band workout system with 5 resistance levels",
-    "image_url": "https://example.com/bands.jpg",
-    "product_url": "https://fitcore.com/powerflex-bands",
-    "ad_type": "product_description",
-    "ad_tone": "bold"
-  }'
-```
-
----
 
 ## 🤝 Contributing
 
@@ -202,8 +132,30 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🚀 Roadmap
 
-- [ ] Add Image Generation.
+- [x] Add Image Generation.
 - [ ] Docker deployment
+
+---
+
+## 🖼️ Example UI Screenshot
+
+Below is an example of the user interface for the AI Ad Generator:
+
+<div style="display: flex; gap: 20px;">
+  <img src="assets/images34.png" alt="Example UI 1" style="width: 48%; border: 1px solid #ddd; border-radius: 8px;" />
+  <img src="assets/img007.png" alt="Example UI 2" style="width: 48%; border: 1px solid #ddd; border-radius: 8px;" />
+</div>
+
+---
+
+## 🖼️ Generated Images
+
+Below are examples of generated images:
+
+<div style="display: flex; gap: 20px;">
+  <img src="assets/Aurora_Pro_Wireless_Earbuds_SoundWave.png" alt="Generated Image 1" style="width: 48%; border: 1px solid #ddd; border-radius: 8px;" />
+  <img src="assets/Radiance_Vitamin_C_Serum_LuxeDerm.png" alt="Generated Image 2" style="width: 48%; border: 1px solid #ddd; border-radius: 8px;" />
+</div>
 
 ---
 
