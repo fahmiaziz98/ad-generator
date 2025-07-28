@@ -12,6 +12,7 @@ from src.models.requests import ImageGenerationRequest
 from src.models.response import ImageResult
 from src.service.imagen_service import get_imagen_service, ImageService
 from src.config import settings
+from src.utils.helpers import generate_request_id
 
 
 router = APIRouter(prefix=settings.API_V1_PREFIX, tags=["Image Generation"])
@@ -49,6 +50,7 @@ async def generate_image(
             detail={
                 "error": "image_generation_failed",
                 "message": str(e),
+                "request_id": generate_request_id()
             }
         )
 
@@ -89,6 +91,7 @@ async def get_image(file_name: str):
             status_code=500,
             detail={
                 "error": "image_retrieval_failed",
-                "message": str(e)
+                "message": str(e),
+                "request_id": generate_request_id()
             }
         )

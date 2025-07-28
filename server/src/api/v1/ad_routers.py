@@ -10,7 +10,6 @@ from fastapi.responses import StreamingResponse
 
 from src.models import AdGenerationRequest, AdGenerationResponse
 from src.service.ad_service import get_ad_service, AdService
-from src.api.dependency import get_rate_limiter
 from src.utils.helpers import generate_request_id
 from src.config import settings
 
@@ -26,7 +25,6 @@ router = APIRouter(prefix=settings.API_V1_PREFIX, tags=["Advertisement Generatio
 async def generate_ad(
     request: AdGenerationRequest,
     ad_service: Annotated[AdService, Depends(get_ad_service)],
-    # rate_limiter=Depends(get_rate_limiter),
 ):
     """
     Generate advertisement content based on the provided request.
@@ -61,7 +59,6 @@ async def generate_ad(
 async def generate_ad_streaming(
     request: AdGenerationRequest,
     ad_service: Annotated[AdService, Depends(get_ad_service)],
-    # rate_limiter=Depends(get_rate_limiter)
 ):
     """
     Generate advertisement content with streaming response.
