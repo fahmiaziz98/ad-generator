@@ -102,7 +102,7 @@ npm run dev
 ```
 
 Access the client at [http://localhost:5173](http://localhost:5173).
-- **Note**: Please see api docs [here](server/API_DOCS.md)
+- **Note**: Please see api docs [here](server/README.md)
 
 ---
 
