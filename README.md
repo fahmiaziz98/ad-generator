@@ -142,8 +142,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 Below is an example of the user interface for the AI Ad Generator:
 
 <div style="display: flex; gap: 20px;">
-  <img src="assets/images34.png" alt="Example UI 1" style="width: 48%; border: 1px solid #ddd; border-radius: 8px;" />
-  <img src="assets/img007.png" alt="Example UI 2" style="width: 48%; border: 1px solid #ddd; border-radius: 8px;" />
+  <img src="assets/images34.png" alt="Example UI 1" style="width: 48%; object-fit: cover; border: 1px solid #ddd; border-radius: 8px;" />
+  <img src="assets/img007.png" alt="Example UI 2" style="width: 48%; height: 100%; object-fit: cover; border: 1px solid #ddd; border-radius: 8px;" />
 </div>
 
 ---
@@ -154,7 +154,7 @@ Below are examples of generated images:
 
 <div style="display: flex; gap: 20px;">
   <img src="assets/Aurora_Pro_Wireless_Earbuds_SoundWave.png" alt="Generated Image 1" style="width: 48%; border: 1px solid #ddd; border-radius: 8px;" />
-  <img src="assets/Radiance_Vitamin_C_Serum_LuxeDerm.png" alt="Generated Image 2" style="width: 48%; heigth: 100%; border: 1px solid #ddd; border-radius: 8px;" />
+  <img src="assets/Radiance_Vitamin_C_Serum_LuxeDerm.png" alt="Generated Image 2" style="width: 48%; border: 1px solid #ddd; border-radius: 8px;" />
 </div>
 
 ---
