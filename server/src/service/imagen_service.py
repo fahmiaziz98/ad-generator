@@ -22,6 +22,7 @@ class ImageService:
             ImageResult containing the path to the generated image or None if generation failed.
         """
         try:
+            logger.info(f"Starting image generation for product: {request.product_name}, brand: {request.brand_name}")
             path_file = self.image_generator.generate_image_prompt(
                 product_name=request.product_name,
                 brand_name=request.brand_name,
@@ -39,7 +40,7 @@ class ImageService:
                 logger.error("Failed to generate image")
                 return None
         except Exception as e:
-            logger.error(f"Error generating image: {e}")
+            logger.critical(f"Critical error during image generation: {e}")
             return None
 
 # Singleton service instance

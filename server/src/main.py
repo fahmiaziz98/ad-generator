@@ -1,9 +1,13 @@
+from loguru import logger
 from datetime import datetime
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.api.v1.ad_routers import router as ad_router
 from src.api.v1.imagen_router import router as imagen_router
 from src.config import settings
+
+
+logger.add("logger.log", rotation="10 MB", retention="10 days", level="DEBUG")
 
 app = FastAPI(
     title=settings.APP_NAME,

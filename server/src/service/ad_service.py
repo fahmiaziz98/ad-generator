@@ -1,3 +1,4 @@
+from loguru import logger
 from typing import AsyncIterator, Dict, Any, Optional
 from src.models import (
     AdGenerationRequest,
@@ -22,7 +23,14 @@ class AdService:
         Returns:
             AdGenerationResponse containing the generated ad content.
         """
-        return await self.ad_generator.generate(request, **kwargs)
+        logger.info(f"Starting ad generation for product: {request.product_name}, brand: {request.brand_name}")
+        try:
+            response = await self.ad_generator.generate(request, **kwargs)
+            logger.info(f"Ad generated successfully for request ID: {response.request_id}")
+            return response
+        except Exception as e:
+            logger.critical(f"Critical error during ad generation: {e}")
+            raise
 
     async def generate_ad_streaming(
         self, 
@@ -36,10 +44,13 @@ class AdService:
         Returns:
             AsyncIterator yielding chunks of AdGenerationResponse.
         """
+        logger.info(f"Starting streaming ad generation for product: {request.product_name}, brand: {request.brand_name}")
         try:
             async for chunk in self.ad_generator.generate_streaming(request, **kwargs):
+                logger.debug(f"Streaming chunk: {chunk}")
                 yield chunk
         except Exception as e:
+            logger.critical(f"Critical error during streaming ad generation: {e}")
             yield {
                 "status": "error",
                 "message": str(e),

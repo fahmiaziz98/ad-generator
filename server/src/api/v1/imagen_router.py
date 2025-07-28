@@ -1,3 +1,4 @@
+from loguru import logger
 from pathlib import Path
 from typing import Annotated
 from fastapi import (
@@ -71,22 +72,23 @@ async def get_image(file_name: str):
     Returns:
     - Image file if found, otherwise raises HTTP 404 error.
     """
+    logger.info(f"Retrieving image: {file_name}")
     try:
         upload_dir = Path(settings.UPLOAD_DIR)
         file_path = upload_dir / file_name
 
         if not file_path.exists():
+            logger.warning(f"Image not found: {file_name}")
             raise HTTPException(status_code=404, detail="Image not found")
         
+        logger.info(f"Image retrieved successfully: {file_name}")
         return FileResponse(
             path=file_path,
             media_type="image/png",
             filename=file_name
         )
-    
-    except HTTPException:
-        raise
     except Exception as e:
+        logger.critical(f"Critical error during image retrieval: {e}")
         raise HTTPException(
             status_code=500,
             detail={
