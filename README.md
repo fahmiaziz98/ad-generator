@@ -154,7 +154,7 @@ Below are examples of generated images:
 
 <div style="display: flex; gap: 20px;">
   <img src="assets/Aurora_Pro_Wireless_Earbuds_SoundWave.png" alt="Generated Image 1" style="width: 48%; border: 1px solid #ddd; border-radius: 8px;" />
-  <img src="assets/Radiance_Vitamin_C_Serum_LuxeDerm.png" alt="Generated Image 2" style="width: 48%; border: 1px solid #ddd; border-radius: 8px;" />
+  <img src="assets/Radiance_Vitamin_C_Serum_LuxeDerm.png" alt="Generated Image 2" style="width: 48%; heigth: 100%; border: 1px solid #ddd; border-radius: 8px;" />
 </div>
 
 ---
