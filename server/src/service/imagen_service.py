@@ -5,11 +5,22 @@ from src.models.requests import ImageGenerationRequest
 from src.models.response import ImageResult
 
 class ImageService:
+    """
+    Service to handle image generation requests.
+    This service uses the ImageGenerator class to create images based on product details.
+    """ 
 
     def __init__(self):
         self.image_generator = ImageGenerator()
     
     def generate_image(self, request: ImageGenerationRequest) -> Optional[ImageResult]:
+        """
+        Generate an image based on the provided request details.
+        Args:
+            request: ImageGenerationRequest containing product details. 
+        Returns:
+            ImageResult containing the path to the generated image or None if generation failed.
+        """
         try:
             path_file = self.image_generator.generate_image_prompt(
                 product_name=request.product_name,

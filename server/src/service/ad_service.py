@@ -1,20 +1,27 @@
 from typing import AsyncIterator, Dict, Any, Optional
-from src.config import settings
 from src.models import (
     AdGenerationRequest,
     AdGenerationResponse
 )
 from src.core.ad_generator import AIAdGenerator
-from src.utils.helpers import generate_request_id
 
 
 class AdService:
-    """Service class for handling ad generation requests."""
+    """
+    Service to handle ad generation requests.
+    This service uses the AIAdGenerator class to create ads based on product details.
+    """
     def __init__(self) -> None:
         self.ad_generator = AIAdGenerator()
 
     async def generate_ad(self, request: AdGenerationRequest, **kwargs) -> AdGenerationResponse:
-        """Generate ad content based on the provided request."""
+        """
+        Generate an ad based on the provided request details.
+        Args:
+            request: AdGenerationRequest containing product details.
+        Returns:
+            AdGenerationResponse containing the generated ad content.
+        """
         return await self.ad_generator.generate(request, **kwargs)
 
     async def generate_ad_streaming(
@@ -22,7 +29,13 @@ class AdService:
         request: AdGenerationRequest, 
         **kwargs
     ) -> AsyncIterator[Dict[str, Any]]:
-        """Generate ad content with streaming response."""
+        """        
+        Generate an ad in a streaming manner based on the provided request details.
+        Args:
+            request: AdGenerationRequest containing product details.
+        Returns:
+            AsyncIterator yielding chunks of AdGenerationResponse.
+        """
         try:
             async for chunk in self.ad_generator.generate_streaming(request, **kwargs):
                 yield chunk
@@ -31,20 +44,6 @@ class AdService:
                 "status": "error",
                 "message": str(e),
                 "error_code": "service_error"
-            }
-    
-    async def health_check(self) -> Dict[str, Any]:
-        try:
-            is_healthy = await self.ad_generator.llm.health_check()
-            return {
-                "status": "healthy" if is_healthy else "unhealthy",
-                "model_name": self.ad_generator.llm.model_name,
-                "version": settings.VERSION
-            }
-        except Exception as e:
-            return {
-                "status": "unhealthy",
-                "error": str(e)
             }
 
 # Singleton service instance
