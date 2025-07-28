@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.api.v1.ad_routers import router as ad_router
@@ -17,6 +18,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# add router healthcheck
+@app.get("/healthcheck")
+async def health_check():
+    """Health check endpoint"""
+    return {
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat(),
+        "version": settings.APP_VERSION,
+        "service": settings.APP_NAME
+    }
+
 
 # Register API router
 app.include_router(ad_router)
